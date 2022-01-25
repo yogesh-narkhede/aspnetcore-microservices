@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Basket.API.Entities
 {
@@ -20,8 +17,8 @@ namespace Basket.API.Entities
             UserName = userName;
         }
 
-        public decimal TotalPrice 
-        { 
+        public decimal TotalPrice
+        {
             get
             {
                 decimal totalPrice = 0;
