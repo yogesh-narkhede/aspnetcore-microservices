@@ -1,8 +1,11 @@
-using Discount.Grpc.Extentions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Ordering.API.Extensions;
+using Ordering.Infrastructure.Persistence;
 
-namespace Discount.Grpc
+namespace Ordering.API
 {
     public class Program
     {
@@ -10,12 +13,14 @@ namespace Discount.Grpc
         {
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
-            host.MigrateDatabase<Program>();
+            host.MigrateDatabase<OrderContext>((context, services) =>
+            {
+                var logger = services.GetService<ILogger<OrderContextSeed>>();
+                OrderContextSeed.SeedAsync(context, logger).Wait();
+            });
             host.Run();
         }
 
-        // Additional configuration is required to successfully run gRPC on macOS.
-        // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
